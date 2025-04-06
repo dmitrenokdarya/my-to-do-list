@@ -1,5 +1,5 @@
 import { createAction, createReducer, nanoid } from "@reduxjs/toolkit"
-import { FilterValues, Todolist } from "../app/App"
+import { FilterValues, Todolist } from "@/app/App"
 
 
 //initial state
@@ -45,8 +45,5 @@ export const todolistsReducer = createReducer(initialState, builder => {
         })
 })
 
-
-export type deleteTodolistAction = ReturnType<typeof deleteTodolistAC>
-export type createTodolistAction = ReturnType<typeof createTodolistAC>
 
 

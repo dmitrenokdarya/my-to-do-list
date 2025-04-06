@@ -1,8 +1,8 @@
-import { v1 } from 'uuid'
 import { beforeEach, expect, test } from 'vitest'
-import type { Todolist } from '../app/App'
-import { changeTodolistFilterAC, changeTodolistTitleAC, createTodolistAC, deleteTodolistAC, todolistsReducer } from './todolists-reducer'
+import type { Todolist } from '@/app/App'
+
 import { nanoid } from '@reduxjs/toolkit'
+import { changeTodolistFilterAC, changeTodolistTitleAC, createTodolistAC, deleteTodolistAC, todolistsReducer } from '@/model/todolists-reducer'
 
 let todolistId1: string
 let todolistId2: string
@@ -50,8 +50,7 @@ test('correct todolist should change its filter', () => {
 //test_4
 test('correct todolist should be created', () => {
     const title = 'New todolist'
-    const id = nanoid()
-    const endState = todolistsReducer(startState, createTodolistAC({id, title}))
+    const endState = todolistsReducer(startState, createTodolistAC(title))
 
     expect(endState.length).toBe(3)
     expect(endState[2].title).toBe(title)
