@@ -1,8 +1,8 @@
 import { Todolist } from "@/app/App"
-import { useAppSelector } from "@/common/hooks/useAppSelector"
 import { selectTasks } from "@/model/tasks-selectors"
 import { List } from "@mui/material"
 import { TaskItem } from "./TaskItem/TaskItem"
+import { useAppSelector } from "@/common/hooks"
 
 
 
