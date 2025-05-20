@@ -1,6 +1,6 @@
 import { Todolist } from "@/app/App"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch"
-import { changeTodolistTitleAC, deleteTodolistAC } from "@/model/todolists-reducer"
+import { changeTodolistTitleAC, deleteTodolistAC } from "@/model/todolists-slice"
 import styles from './TodolistTitle.module.css'
 import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan"
 import IconButton from "@mui/material/IconButton"
@@ -10,9 +10,9 @@ type Props = {
     todolist: Todolist
 }
 
-export const TodolistTitle = ({todolist}: Props) => {
+export const TodolistTitle = ({ todolist }: Props) => {
 
-    const {id, title} = todolist
+    const { id, title } = todolist
 
     const dispatch = useAppDispatch()
 

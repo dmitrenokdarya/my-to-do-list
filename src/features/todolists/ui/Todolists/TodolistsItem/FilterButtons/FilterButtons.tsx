@@ -1,7 +1,7 @@
 import { FilterValues, Todolist } from "@/app/App"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch"
 import { containerSx } from "@/common/styles/container.styles"
-import { changeTodolistFilterAC } from "@/model/todolists-reducer"
+import { changeTodolistFilterAC } from "@/model/todolists-slice"
 import { Box, Button } from "@mui/material"
 
 

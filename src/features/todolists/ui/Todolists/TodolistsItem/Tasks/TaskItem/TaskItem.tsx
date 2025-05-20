@@ -3,7 +3,7 @@ import { Checkbox, IconButton, ListItem } from "@mui/material"
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Task } from "@/app/App"
 import { useAppDispatch } from "@/common/hooks/useAppDispatch"
-import { changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC } from "@/model/task-reducer"
+import { changeTaskStatusAC, changeTaskTitleAC, deleteTaskAC } from "@/model/task-slice"
 import { getListItemSx } from "./TaskItem.styles"
 import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan"
 
