@@ -1,12 +1,11 @@
-import { nanoid } from '@reduxjs/toolkit'
 import { createTodolistTC, deleteTodolistTC } from './todolists-slice'
 import { TasksState } from '@/features/todolists/model/tasks-reducer'
-import { createAppSlice } from '@/common/utils'
+import { createAppSlice, handleServerAppError, handleServerNetworkError } from '@/common/utils'
 import { tasksApi } from '@/features/todolists/api/tasksApi'
-import { DomainTask, UpdateTaskModel } from '@/features/todolists/api/tasksApi.types'
-import { TaskPriority, TaskStatus } from '@/common/enums'
+import { UpdateTaskModel } from '@/features/todolists/api/tasksApi.types'
+import { TaskStatus, ResultCode } from '@/common/enums'
 import { RootState } from '@/app/store'
-import { setAppStatusAC } from '@/app/app-slice'
+import { setAppErrorAC, setAppStatusAC } from '@/app/app-slice'
 
 
 export const tasksSlice = createAppSlice({
@@ -39,10 +38,15 @@ export const tasksSlice = createAppSlice({
                 try {
                     dispatch(setAppStatusAC({ status: 'loading' }))
                     const res = await tasksApi.createTask(payload)
-                    dispatch(setAppStatusAC({ status: 'succeeded' }))
-                    return { task: res.data.data.item }
+                    if (res.data.resultCode === ResultCode.Success) {
+                        dispatch(setAppStatusAC({ status: "succeeded" }))
+                        return { task: res.data.data.item }
+                    } else {
+                        handleServerAppError(res.data, dispatch)
+                        return rejectWithValue(null)
+                    }
                 } catch (error) {
-                    dispatch(setAppStatusAC({ status: 'failed' }))
+                    handleServerNetworkError( dispatch, error )
                     return rejectWithValue(null)
                 }
             },
@@ -131,10 +135,14 @@ export const tasksSlice = createAppSlice({
                 try {
                     dispatch(setAppStatusAC({ status: 'loading' }))
                     const res = await tasksApi.updateTask({ todolistId, taskId, model })
-                    dispatch(setAppStatusAC({ status: 'succeeded' }))
-                    return { task: res.data.data.item}
+                    if (res.data.resultCode === ResultCode.Success) {
+                        return { task: res.data.data.item }
+                    } else {
+                        handleServerAppError(res.data, dispatch)
+                        return rejectWithValue(null)
+                    }
                 } catch (error) {
-                    dispatch(setAppStatusAC({ status: 'failed' }))
+                    handleServerNetworkError( dispatch, error )
                     return rejectWithValue(null)
                 }
             },

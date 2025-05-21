@@ -1,3 +1,4 @@
+import { RequestStatus } from "@/common/types"
 import { createAction, createReducer, nanoid } from "@reduxjs/toolkit"
 
 export const deleteTodolistAC = createAction<{ id: string }>("todolists/deleteTodolist")
@@ -20,7 +21,7 @@ export const todolistsReducer = createReducer(initialState, (builder) => {
       }
     })
     .addCase(createTodolistAC, (state, action) => {
-      state.push({ ...action.payload, filter: "all" })
+      state.push({ ...action.payload, filter: "all", entityStatus: 'succeeded' })
     })
     .addCase(changeTodolistTitleAC, (state, action) => {
       const index = state.findIndex((todolist) => todolist.id === action.payload.id)
@@ -40,6 +41,7 @@ export type Todolist = {
   id: string
   title: string
   filter: FilterValues
+  entityStatus: RequestStatus
 }
 
 export type FilterValues = "all" | "active" | "completed"
