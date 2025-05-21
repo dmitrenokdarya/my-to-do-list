@@ -8,20 +8,66 @@ import {
   type TasksState,
 } from "../tasks-reducer"
 import { createTodolistAC, deleteTodolistAC } from "../todolists-reducer"
+import { TaskPriority, TaskStatus } from "@/common/enums"
 
 let startState: TasksState = {}
+
+const taskDefaultValues = {
+  description: '',
+  deadline: '',
+  addedDate: '',
+  startDate: '',
+  priority: TaskPriority.Low,
+  order: 0,
+}
 
 beforeEach(() => {
   startState = {
     todolistId1: [
-      { id: "1", title: "CSS", isDone: false },
-      { id: "2", title: "JS", isDone: true },
-      { id: "3", title: "React", isDone: false },
+      {
+        id: '1',
+        title: 'CSS',
+        status: TaskStatus.New,
+        todoListId: 'todolistId1',
+        ...taskDefaultValues,
+      },
+      {
+        id: '2',
+        title: 'JS',
+        status: TaskStatus.Completed,
+        todoListId: 'todolistId1',
+        ...taskDefaultValues,
+      },
+      {
+        id: '3',
+        title: 'React',
+        status: TaskStatus.New,
+        todoListId: 'todolistId1',
+        ...taskDefaultValues,
+      },
     ],
     todolistId2: [
-      { id: "1", title: "bread", isDone: false },
-      { id: "2", title: "milk", isDone: true },
-      { id: "3", title: "tea", isDone: false },
+      {
+        id: '1',
+        title: 'bread',
+        status: TaskStatus.New,
+        todoListId: 'todolistId2',
+        ...taskDefaultValues,
+      },
+      {
+        id: '2',
+        title: 'milk',
+        status: TaskStatus.Completed,
+        todoListId: 'todolistId2',
+        ...taskDefaultValues,
+      },
+      {
+        id: '3',
+        title: 'tea',
+        status: TaskStatus.New,
+        todoListId: 'todolistId2',
+        ...taskDefaultValues,
+      },
     ],
   }
 })

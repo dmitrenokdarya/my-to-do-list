@@ -1,5 +1,6 @@
 import { createAction, createReducer, nanoid } from "@reduxjs/toolkit"
 import { createTodolistAC, deleteTodolistAC } from "./todolists-reducer"
+import { DomainTask } from "../api/tasksApi.types";
 
 export const deleteTaskAC = createAction<{ todolistId: string; taskId: string }>("tasks/deleteTask")
 export const createTaskAC = createAction<{ todolistId: string; title: string }>("tasks/createTask")
@@ -51,4 +52,4 @@ export type Task = {
   isDone: boolean
 }
 
-export type TasksState = Record<string, Task[]>
+export type TasksState = Record<string, DomainTask[]>

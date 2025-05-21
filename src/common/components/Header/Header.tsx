@@ -8,14 +8,17 @@ import Container from "@mui/material/Container"
 import IconButton from "@mui/material/IconButton"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
-import { changeThemeModeAC, selectThemeMode } from "@/app/app-slice"
+import LinearProgress from "@mui/material/LinearProgress"
+import { changeThemeModeAC, selectStatus, selectThemeMode } from "@/app/app-slice"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
+  const status = useAppSelector(selectStatus)
 
   const dispatch = useAppDispatch()
 
   const theme = getTheme(themeMode)
+
 
   const changeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
@@ -36,6 +39,9 @@ export const Header = () => {
           </div>
         </Container>
       </Toolbar>
+      {
+        status === 'loading' && <LinearProgress />
+      }
     </AppBar>
   )
 }
