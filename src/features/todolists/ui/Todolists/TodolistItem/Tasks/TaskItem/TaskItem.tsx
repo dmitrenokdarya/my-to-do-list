@@ -9,13 +9,15 @@ import { getListItemSx } from "./TaskItem.styles"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types"
 import { TaskStatus } from "@/common/enums"
 import { changeTaskStatusTC, changeTaskTitleTC, deleteTaskTC } from "@/model/task-slice"
+import { Todolist } from "@/features/todolists/model/todolists-reducer"
 
 type Props = {
   task: DomainTask
   todolistId: string
+  todolist: Todolist
 }
 
-export const TaskItem = ({ task, todolistId }: Props) => {
+export const TaskItem = ({ task, todolistId, todolist }: Props) => {
   const dispatch = useAppDispatch()
 
   const deleteTask = () => {
@@ -36,10 +38,10 @@ export const TaskItem = ({ task, todolistId }: Props) => {
   return (
     <ListItem sx={getListItemSx(isTaskCompleted)}>
       <div>
-        <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} />
-        <EditableSpan value={task.title} onChange={changeTaskTitle} />
+        <Checkbox checked={isTaskCompleted} onChange={changeTaskStatus} disabled={todolist.entityStatus === 'loading'}/>
+        <EditableSpan value={task.title} onChange={changeTaskTitle} disabled={todolist.entityStatus === 'loading'}/>
       </div>
-      <IconButton onClick={deleteTask}>
+      <IconButton onClick={deleteTask} disabled={todolist.entityStatus === 'loading'}>
         <DeleteIcon />
       </IconButton>
     </ListItem>
