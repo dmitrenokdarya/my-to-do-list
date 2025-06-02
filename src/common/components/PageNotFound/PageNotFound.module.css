@@ -1,0 +1,14 @@
+.title {
+    font-size: 250px;
+    margin: 0;
+}
+
+.subtitle {
+    font-size: 50px;
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+}
+
+.div {
+    text-align: center;
+}

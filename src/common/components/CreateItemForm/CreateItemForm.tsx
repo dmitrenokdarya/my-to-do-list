@@ -4,7 +4,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox"
 import IconButton from "@mui/material/IconButton"
 
 type Props = {
-  onCreateItem: (title: string) => void,
+  onCreateItem: (title: string) => void
   disabled?: boolean
 }
 

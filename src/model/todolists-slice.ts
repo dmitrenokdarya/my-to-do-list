@@ -3,8 +3,8 @@ import { ResultCode } from "@/common/enums"
 import { RequestStatus } from "@/common/types"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi"
-import { Todolist } from "@/features/todolists/api/todolistsApi.types"
-import { FilterValues } from "@/features/todolists/model/todolists-reducer"
+import { TodolistSchema } from "@/features/todolists/api/todolistsApi.types"
+import { FilterValues, Todolist } from "@/features/todolists/model/todolists-reducer"
 
 
 
@@ -20,8 +20,9 @@ export const todolistsSlice = createAppSlice({
                 try {
                     dispatch(setAppStatusAC({ status: 'loading' }))
                     const res = await todolistsApi.getTodolists()
+                    const todolists = TodolistSchema.array().parse(res.data)
                     dispatch(setAppStatusAC({ status: 'succeeded' }))
-                    return { todolists: res.data }
+                    return { todolists }
                 } catch (error) {
                     dispatch(setAppStatusAC({ status: 'failed' }))
                     return rejectWithValue(null)

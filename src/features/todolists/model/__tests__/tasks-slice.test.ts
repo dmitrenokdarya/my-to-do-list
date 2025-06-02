@@ -1,11 +1,8 @@
 import { TaskPriority, TaskStatus } from "@/common/enums"
 import { nanoid } from "@reduxjs/toolkit"
 import { beforeEach, expect, test } from "vitest"
-import { tasksReducer, TasksState } from "../tasks-reducer"
-import { createTodolistTC, deleteTodolistTC } from "@/model/todolists-slice"
-import { changeTaskStatusTC, changeTaskTitleTC, createTaskTC, deleteTaskTC } from "@/model/task-slice"
-
-
+import { createTaskTC, deleteTaskTC, tasksReducer, type TasksState, updateTaskTC } from "../tasks-slice"
+import { createTodolistTC, deleteTodolistTC } from "../todolists-slice"
 
 let startState: TasksState = {}
 
@@ -150,7 +147,7 @@ test("correct task should change its status", () => {
   }
   const endState = tasksReducer(
     startState,
-    changeTaskStatusTC.fulfilled({ task }, "requestId", {
+    updateTaskTC.fulfilled({ task }, "requestId", {
       todolistId: "todolistId2",
       taskId: "2",
       domainModel: { status: TaskStatus.New },
@@ -176,7 +173,7 @@ test("correct task should change its title", () => {
   }
   const endState = tasksReducer(
     startState,
-    changeTaskTitleTC.fulfilled({ task }, "requestId", {
+    updateTaskTC.fulfilled({ task }, "requestId", {
       todolistId: "todolistId2",
       taskId: "2",
       domainModel: { title: "coffee" },
