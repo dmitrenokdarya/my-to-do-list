@@ -1,5 +1,6 @@
-import { changeThemeModeAC, selectAppStatus, selectThemeMode } from "@/app/app-slice.ts"
+import { changeThemeModeAC, selectAppStatus, selectThemeMode, setIsLoggedInAC } from "@/app/app-slice.ts"
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
+import { Path } from "@/common/routing"
 import { containerSx } from "@/common/styles"
 import { getTheme } from "@/common/theme"
 import { NavButton } from "@/common/components/NavButton/NavButton"
@@ -10,6 +11,11 @@ import IconButton from "@mui/material/IconButton"
 import Switch from "@mui/material/Switch"
 import Toolbar from "@mui/material/Toolbar"
 import LinearProgress from "@mui/material/LinearProgress"
+import { NavLink } from "react-router"
+import { useLogoutMutation } from "@/features/auth/api/authApi"
+import { clearDataAC } from "@/common/actions"
+import { AUTH_TOKEN } from "@/common/constants"
+import { ResultCode } from "@/common/enums"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
@@ -23,6 +29,18 @@ export const Header = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
   }
 
+  const [logout] = useLogoutMutation()
+
+  const logoutHandler = () => {
+    logout().then(res => {
+      if (res.data?.resultCode === ResultCode.Success) {
+        dispatch(setIsLoggedInAC({ isLoggedIn: false }))
+        localStorage.removeItem(AUTH_TOKEN)
+        dispatch(clearDataAC())
+      }
+    })
+  }
+
   return (
     <AppBar position="static" sx={{ mb: "30px" }}>
       <Toolbar>
@@ -31,9 +49,11 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
           <div>
-            <NavButton>Sign in</NavButton>
-            <NavButton>Sign up</NavButton>
-            <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+            <NavButton onClick={logoutHandler}>Log out</NavButton>
+            {/*<NavButton background={theme.palette.primary.dark}>Faq</NavButton>*/}
+            <NavLink to={Path.Faq} style={{ color: "white" }}>
+              Faq
+            </NavLink>
             <Switch color={"default"} onChange={changeMode} />
           </div>
         </Container>

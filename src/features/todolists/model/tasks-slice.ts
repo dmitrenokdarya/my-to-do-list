@@ -3,8 +3,9 @@ import type { RootState } from "@/app/store"
 import { ResultCode } from "@/common/enums"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi"
-import { DomainTaskSchema, type DomainTask, type UpdateTaskModel } from "@/features/todolists/api/tasksApi.types"
+import { type DomainTask, domainTaskSchema, type UpdateTaskModel } from "@/features/todolists/api/tasksApi.types"
 import { createTodolistTC, deleteTodolistTC } from "./todolists-slice"
+import { clearDataAC } from "@/common/actions"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -20,6 +21,9 @@ export const tasksSlice = createAppSlice({
       .addCase(deleteTodolistTC.fulfilled, (state, action) => {
         delete state[action.payload.id]
       })
+      .addCase(clearDataAC.type, () => {
+        return {}
+      })
   },
   reducers: (create) => ({
     fetchTasksTC: create.asyncThunk(
@@ -27,7 +31,7 @@ export const tasksSlice = createAppSlice({
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.getTasks(todolistId)
-          const tasks = DomainTaskSchema.array().parse(res.data.items)
+          const tasks = domainTaskSchema.array().parse(res.data.items)
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolistId, tasks }
         } catch (error) {
