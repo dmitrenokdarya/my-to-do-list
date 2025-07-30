@@ -1,7 +1,28 @@
 import type { RequestStatus } from "@/common/types"
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice, isPending, isFulfilled, isRejected } from "@reduxjs/toolkit"
+import { todolistsApi } from "../features/todolists/api/todolistsApi"
+import { tasksApi } from "../features/todolists/api/tasksApi"
 
 export const appSlice = createSlice({
+  extraReducers: builder => {
+    builder.addMatcher(isPending, (state, action) => {
+      if (
+        todolistsApi.endpoints.getTodolists.matchPending(action) ||
+        tasksApi.endpoints.getTasks.matchPending(action)
+      ) {
+        return
+      }
+      debugger
+      state.status = "loading"
+    }
+    )
+      .addMatcher(isFulfilled, (state) => {
+        state.status = "succeeded"
+      })
+      .addMatcher(isRejected, (state) => {
+        state.status = "failed"
+      })
+  },
   name: "app",
   initialState: {
     themeMode: "dark" as ThemeMode,
@@ -31,8 +52,8 @@ export const appSlice = createSlice({
   }),
 })
 
-export const { selectThemeMode, selectAppStatus, selectAppError, selectIsLoggedIn  } = appSlice.selectors
-export const { changeThemeModeAC, setAppStatusAC, setAppErrorAC, setIsLoggedInAC  } = appSlice.actions
+export const { selectThemeMode, selectAppStatus, selectAppError, selectIsLoggedIn } = appSlice.selectors
+export const { changeThemeModeAC, setAppStatusAC, setAppErrorAC, setIsLoggedInAC } = appSlice.actions
 export const appReducer = appSlice.reducer
 
 export type ThemeMode = "dark" | "light"

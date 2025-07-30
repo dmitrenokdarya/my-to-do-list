@@ -13,17 +13,15 @@ import Toolbar from "@mui/material/Toolbar"
 import LinearProgress from "@mui/material/LinearProgress"
 import { NavLink } from "react-router"
 import { useLogoutMutation } from "@/features/auth/api/authApi"
-import { clearDataAC } from "@/common/actions"
 import { AUTH_TOKEN } from "@/common/constants"
 import { ResultCode } from "@/common/enums"
+import { baseApi } from "@/app/baseApi"
 
 export const Header = () => {
   const themeMode = useAppSelector(selectThemeMode)
   const status = useAppSelector(selectAppStatus)
 
   const dispatch = useAppDispatch()
-
-  const theme = getTheme(themeMode)
 
   const changeMode = () => {
     dispatch(changeThemeModeAC({ themeMode: themeMode === "light" ? "dark" : "light" }))
@@ -36,8 +34,10 @@ export const Header = () => {
       if (res.data?.resultCode === ResultCode.Success) {
         dispatch(setIsLoggedInAC({ isLoggedIn: false }))
         localStorage.removeItem(AUTH_TOKEN)
-        dispatch(clearDataAC())
       }
+    })
+    .then (() => {
+      dispatch(baseApi.util.invalidateTags(['Todolist', 'Task']))
     })
   }
 
