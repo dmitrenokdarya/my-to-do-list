@@ -1,3 +1,4 @@
+import { baseResponseSchema } from "@/common/types"
 import { z } from "zod/v4"
 
 export const todolistSchema = z.object({
@@ -8,3 +9,11 @@ export const todolistSchema = z.object({
 })
 
 export type Todolist = z.infer<typeof todolistSchema>
+
+export const createTodolistResponseSchema = baseResponseSchema(
+  z.object({
+    item: todolistSchema,
+  })
+)
+
+export type CreateTodolistResponse = z.infer<typeof createTodolistResponseSchema>

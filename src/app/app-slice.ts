@@ -12,7 +12,6 @@ export const appSlice = createSlice({
       ) {
         return
       }
-      debugger
       state.status = "loading"
     }
     )
