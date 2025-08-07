@@ -1,4 +1,4 @@
-import { setAppErrorAC } from '@/app/app-slice'
+import { setAppErrorAC, setCaptchaAC } from '@/app/app-slice'
 import { ResultCode } from '@/common/enums'
 import { isErrorWithMessage } from './isErrorWithMessage'
 import {
@@ -8,7 +8,7 @@ import {
     QueryReturnValue,
 } from '@reduxjs/toolkit/query/react'
 
-export const handleError = (
+export const handleError = async (
     api: BaseQueryApi,
     result: QueryReturnValue<unknown, FetchBaseQueryError, FetchBaseQueryMeta>
 ) => {
@@ -39,9 +39,29 @@ export const handleError = (
         api.dispatch(setAppErrorAC({ error }))
     }
 
-    if ((result.data as { resultCode: ResultCode }).resultCode === ResultCode.Error) {
-        const messages = (result.data as { messages: string[] }).messages
+    const data = result.data as { resultCode: ResultCode; messages?: string[] }
+
+    if (data.resultCode === ResultCode.Error) {
+        const messages = data.messages || []
         error = messages.length ? messages[0] : error
         api.dispatch(setAppErrorAC({ error }))
+    }
+
+    if (data.resultCode === ResultCode.CaptchaError) {
+        const messages = data.messages || []
+        error = messages.length ? messages[0] : error
+        api.dispatch(setAppErrorAC({ error }))
+
+        // Ленивая загрузка securityApi
+        const { getSecurityApi } = await import('@/features/security/api/securityApi')
+        const securityApi = getSecurityApi()
+        
+        const captchaResult = await api.dispatch(
+            securityApi.endpoints.getCaptchaUrl.initiate()
+        )
+
+        if ('data' in captchaResult && captchaResult.data?.url) {
+            api.dispatch(setCaptchaAC({ captcha: captchaResult.data.url }))
+        }
     }
 }

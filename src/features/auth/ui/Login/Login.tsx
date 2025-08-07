@@ -1,4 +1,4 @@
-import { selectThemeMode, setIsLoggedInAC } from "@/app/app-slice"
+import { selectThemeMode, setCaptchaAC, setIsLoggedInAC, selectCaptchaUrl } from "@/app/app-slice"
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { getTheme } from "@/common/theme"
 import { loginSchema, type LoginInputs } from "@/features/auth/lib/schemas"
@@ -16,8 +16,15 @@ import styles from "./Login.module.css"
 import { useLoginMutation } from "../../api/authApi"
 import { AUTH_TOKEN } from "@/common/constants"
 import { ResultCode } from "@/common/enums"
+import { useGetCaptchaUrlQuery } from "@/features/security/api/securityApi"
+import { useState } from "react"
 
 export const Login = () => {
+
+  const captchaUrl = useAppSelector(selectCaptchaUrl);
+  const [captchaValue, setCaptchaValue] = useState('');
+
+
   const themeMode = useAppSelector(selectThemeMode)
 
   const theme = getTheme(themeMode)
@@ -37,6 +44,7 @@ export const Login = () => {
   })
 
   const onSubmit: SubmitHandler<LoginInputs> = (data) => {
+
     login(data).then(res => {
       if (res.data?.resultCode === ResultCode.Success) {
         dispatch(setIsLoggedInAC({ isLoggedIn: true }))
@@ -91,6 +99,18 @@ export const Login = () => {
                 />
               }
             />
+            {captchaUrl && (
+              <div>
+                <img src={captchaUrl} alt="CAPTCHA" style={{ marginBottom: 10 }} />
+                <TextField
+                  label="Enter CAPTCHA"
+                  value={captchaValue}
+                  onChange={(e) => setCaptchaValue(e.target.value)}
+                  fullWidth
+                  required
+                />
+              </div>
+            )}
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>

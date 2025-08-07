@@ -1,25 +1,28 @@
 import { baseApi } from "@/app/baseApi"
-import type { BaseResponse } from "@/common/types"
+import { DefaultResponse, defaultResponseSchema, meResponse, meResponseSchema, loginResponse, loginResponseSchema } from "@/common/types";
 import type { LoginInputs } from "@/features/auth/lib/schemas"
 
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: build => ({
-    me: build.query<BaseResponse<{ id: number; email: string; login: string }>, void>({
+    me: build.query<meResponse, void>({
       query: () => 'auth/me',
+      extraOptions: { dataSchema: meResponseSchema},
     }),
-    login: build.mutation<BaseResponse<{ userId: number; token: string }>, LoginInputs>({
+    login: build.mutation<loginResponse, LoginInputs>({
       query: body => ({
         url: 'auth/login',
         method: 'POST',
         body,
       }),
+      extraOptions: { dataSchema: loginResponseSchema},
     }),
-    logout: build.mutation<BaseResponse, void>({
+    logout: build.mutation<DefaultResponse, void>({
       query: () => ({
         url: 'auth/login',
         method: 'DELETE',
       }),
+      extraOptions: { dataSchema: defaultResponseSchema},
     }),
   }),
 })

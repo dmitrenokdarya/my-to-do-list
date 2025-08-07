@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const TodolistTitle = ({ todolist }: Props) => {
-  const { id, title, entityStatus } = todolist
+  const { id, title } = todolist
 
   const [removeTodolist] = useRemoveTodolistMutation()
   const [updateTodolistTitle] = useUpdateTodolistTitleMutation()
@@ -23,9 +23,6 @@ export const TodolistTitle = ({ todolist }: Props) => {
     dispatch(
       todolistsApi.util.updateQueryData("getTodolists", undefined, (state) => {
         const todolist = state.find((todo) => todo.id === id)
-        if (todolist) {
-          todolist.entityStatus = entityStatus
-        }
       }),
     )
   }
@@ -48,7 +45,7 @@ export const TodolistTitle = ({ todolist }: Props) => {
       <h3>
         <EditableSpan value={title} onChange={changeTodolistTitle} />
       </h3>
-      <IconButton onClick={deleteTodolist} disabled={entityStatus === "loading"}>
+      <IconButton onClick={deleteTodolist}>
         <DeleteIcon />
       </IconButton>
     </div>
