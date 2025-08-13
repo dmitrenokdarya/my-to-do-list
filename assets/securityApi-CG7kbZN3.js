@@ -1,1 +1,0 @@
-import{b as r}from"./index-4NtohN5D.js";let t;const i=()=>(t||(t=r.injectEndpoints({endpoints:e=>({getCaptchaUrl:e.query({query:()=>"security/get-captcha-url"})})})),t),{useGetCaptchaUrlQuery:p}=i();export{i as getSecurityApi,p as useGetCaptchaUrlQuery};
