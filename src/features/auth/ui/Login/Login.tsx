@@ -15,7 +15,7 @@ import styles from "./Login.module.css"
 import { useLoginMutation } from "../../api/authApi"
 import { AUTH_TOKEN } from "@/common/constants"
 import { ResultCode } from "@/common/enums"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 export const Login = () => {
 
@@ -53,16 +53,18 @@ export const Login = () => {
 
       if (result.resultCode === ResultCode.Success) {
         dispatch(setIsLoggedInAC({ isLoggedIn: true }));
-        dispatch(setCaptchaAC({ captcha: null }));
+        dispatch(setCaptchaAC({ captcha: 'null' }));
         localStorage.setItem(AUTH_TOKEN, result.data.token);
         setCaptchaValue('');
         reset();
         resetLogin();
       }
     } catch (error) {
-      if (error?.data?.resultCode === ResultCode.CaptchaError) {
+      if (error && typeof error === 'object' && 'data' in error && 
+        error.data && typeof error.data === 'object' && 'resultCode' in error.data && 
+        error.data.resultCode === ResultCode.CaptchaError) {
         setCaptchaValue('');
-      }
+    }
       console.error('Login error:', error);
     }
   };

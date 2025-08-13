@@ -2,7 +2,6 @@ import { changeThemeModeAC, selectAppStatus, selectThemeMode, setIsLoggedInAC } 
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { Path } from "@/common/routing"
 import { containerSx } from "@/common/styles"
-import { getTheme } from "@/common/theme"
 import { NavButton } from "@/common/components/NavButton/NavButton"
 import MenuIcon from "@mui/icons-material/Menu"
 import AppBar from "@mui/material/AppBar"

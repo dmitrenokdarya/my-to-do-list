@@ -51,7 +51,7 @@ export const handleError = async (
         const captchaError = data.messages?.[0] || 'Invalid CAPTCHA';
         api.dispatch(setAppErrorAC({ error: captchaError }));
 
-        api.dispatch(setCaptchaAC({ captcha: null }));
+        api.dispatch(setCaptchaAC({ captcha: 'null' }));
 
         const { getSecurityApi } = await import('@/features/security/api/securityApi');
         const securityApi = getSecurityApi();
