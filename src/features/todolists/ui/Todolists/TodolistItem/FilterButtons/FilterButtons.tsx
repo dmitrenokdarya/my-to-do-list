@@ -5,6 +5,8 @@ import { DomainTodolist, FilterValues} from "@/features/todolists/lib/types"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 
+//есть ошибка в том, что при нажатии на кнопку фильтрация спустя пару секнуд отменяется
+
 type Props = {
   todolist: DomainTodolist
 }

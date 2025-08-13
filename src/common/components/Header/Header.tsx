@@ -48,10 +48,9 @@ export const Header = () => {
           <IconButton color="inherit">
             <MenuIcon />
           </IconButton>
-          <div>
-            <NavButton onClick={logoutHandler}>Log out</NavButton>
-            {/*<NavButton background={theme.palette.primary.dark}>Faq</NavButton>*/}
-            <NavLink to={Path.Faq} style={{ color: "white" }}>
+          <div style={{ display: 'flex', gap: '30px', alignItems: 'center'}}>
+            <NavButton onClick={logoutHandler} themeMode={themeMode}>Log out</NavButton>
+            <NavLink to={Path.Faq} style={{ color: themeMode === 'light' ? '#6B8E23' : 'white'}}>
               Faq
             </NavLink>
             <Switch color={"default"} onChange={changeMode} />

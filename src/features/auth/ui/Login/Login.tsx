@@ -1,8 +1,7 @@
 import { selectThemeMode, setCaptchaAC, setIsLoggedInAC, selectCaptchaUrl } from "@/app/app-slice"
 import { useAppDispatch, useAppSelector } from "@/common/hooks"
 import { getTheme } from "@/common/theme"
-import { loginSchema, type LoginInputs } from "@/features/auth/lib/schemas"
-import { zodResolver } from "@hookform/resolvers/zod"
+import { type LoginInputs } from "@/features/auth/lib/schemas"
 import Button from "@mui/material/Button"
 import Checkbox from "@mui/material/Checkbox"
 import FormControl from "@mui/material/FormControl"
@@ -16,8 +15,7 @@ import styles from "./Login.module.css"
 import { useLoginMutation } from "../../api/authApi"
 import { AUTH_TOKEN } from "@/common/constants"
 import { ResultCode } from "@/common/enums"
-import { useGetCaptchaUrlQuery } from "@/features/security/api/securityApi"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export const Login = () => {
 
@@ -29,7 +27,7 @@ export const Login = () => {
 
   const theme = getTheme(themeMode)
 
-  const [login] = useLoginMutation()
+  const [login, { reset: resetLogin }] = useLoginMutation();
 
   const dispatch = useAppDispatch()
   const {
@@ -43,16 +41,32 @@ export const Login = () => {
     defaultValues: { email: "", password: "", rememberMe: false },
   })
 
-  const onSubmit: SubmitHandler<LoginInputs> = (data) => {
 
-    login(data).then(res => {
-      if (res.data?.resultCode === ResultCode.Success) {
-        dispatch(setIsLoggedInAC({ isLoggedIn: true }))
-        localStorage.setItem(AUTH_TOKEN, res.data.data.token)
-        reset()
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+    try {
+      const requestData = {
+        ...data,
+        captcha: captchaUrl ? captchaValue : undefined
+      };
+
+      const result = await login(requestData).unwrap();
+
+      if (result.resultCode === ResultCode.Success) {
+        dispatch(setIsLoggedInAC({ isLoggedIn: true }));
+        dispatch(setCaptchaAC({ captcha: null }));
+        localStorage.setItem(AUTH_TOKEN, result.data.token);
+        setCaptchaValue('');
+        reset();
+        resetLogin();
       }
-    })
-  }
+    } catch (error) {
+      if (error?.data?.resultCode === ResultCode.CaptchaError) {
+        setCaptchaValue('');
+      }
+      console.error('Login error:', error);
+    }
+  };
+
 
   return (
     <Grid container justifyContent={"center"}>
@@ -100,14 +114,16 @@ export const Login = () => {
               }
             />
             {captchaUrl && (
-              <div>
-                <img src={captchaUrl} alt="CAPTCHA" style={{ marginBottom: 10 }} />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <img src={captchaUrl} alt="CAPTCHA" style={{ marginBottom: 10, height: '60px' }} />
                 <TextField
                   label="Enter CAPTCHA"
                   value={captchaValue}
                   onChange={(e) => setCaptchaValue(e.target.value)}
-                  fullWidth
                   required
+                  sx={{
+                    width: '170px',
+                  }}
                 />
               </div>
             )}

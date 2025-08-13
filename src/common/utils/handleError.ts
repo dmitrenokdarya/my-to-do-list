@@ -41,27 +41,29 @@ export const handleError = async (
 
     const data = result.data as { resultCode: ResultCode; messages?: string[] }
 
-    if (data.resultCode === ResultCode.Error) {
-        const messages = data.messages || []
+    if ((result.data as { resultCode: ResultCode }).resultCode === ResultCode.Error) {
+        const messages = (result.data as { messages: string[] }).messages
         error = messages.length ? messages[0] : error
         api.dispatch(setAppErrorAC({ error }))
     }
 
     if (data.resultCode === ResultCode.CaptchaError) {
-        const messages = data.messages || []
-        error = messages.length ? messages[0] : error
-        api.dispatch(setAppErrorAC({ error }))
+        const captchaError = data.messages?.[0] || 'Invalid CAPTCHA';
+        api.dispatch(setAppErrorAC({ error: captchaError }));
 
-        // Ленивая загрузка securityApi
-        const { getSecurityApi } = await import('@/features/security/api/securityApi')
-        const securityApi = getSecurityApi()
-        
+        api.dispatch(setCaptchaAC({ captcha: null }));
+
+        const { getSecurityApi } = await import('@/features/security/api/securityApi');
+        const securityApi = getSecurityApi();
+
         const captchaResult = await api.dispatch(
-            securityApi.endpoints.getCaptchaUrl.initiate()
-        )
+            securityApi.endpoints.getCaptchaUrl.initiate(undefined, {
+                forceRefetch: true
+            })
+        );
 
         if ('data' in captchaResult && captchaResult.data?.url) {
-            api.dispatch(setCaptchaAC({ captcha: captchaResult.data.url }))
+            api.dispatch(setCaptchaAC({ captcha: captchaResult.data.url }));
         }
     }
 }
