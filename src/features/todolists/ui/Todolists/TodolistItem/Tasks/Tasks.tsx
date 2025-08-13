@@ -4,7 +4,7 @@ import List from "@mui/material/List"
 import { useGetTasksQuery } from "@/features/todolists/api/tasksApi"
 import { TasksSkeleton } from "./TasksSkeleton/TasksSkeleton"
 import { DomainTodolist } from "@/features/todolists/lib/types"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { TasksPagination } from "./TasksPagination/TasksPagination"
 import { PAGE_SIZE } from "@/common/constants/constants"
 
